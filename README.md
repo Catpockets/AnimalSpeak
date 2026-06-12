@@ -144,6 +144,7 @@ The game avoids failure states, timers, competitive scoring, and punishment loop
 
 Screenshots can be added here later.
 
+<<<<<<< HEAD
 ## 🖼️ Screenshots
 
 ### Home Screen
@@ -165,6 +166,15 @@ Screenshots can be added here later.
 ### Talk Board
 
 ![Animal Speak talk board](assets/Talk.jpg)
+=======
+```markdown
+![Animal Speak home screen](assets/Home.jpg)
+![Bird mode](assets/Birds.jpg)
+![Aquarium mode](assets/Aquarium.jpg)
+![Safari mode](assets/Safari.jpg)
+![Talk board](assets/Talk.jpg)
+```
+>>>>>>> cd5010fe3f934880ff79bee18e4c63262d61b0ff
 
 ## 🧪 Project Status
 
