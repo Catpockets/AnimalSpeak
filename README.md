@@ -145,7 +145,7 @@ The game avoids failure states, timers, competitive scoring, and punishment loop
 Screenshots can be added here later.
 
 ```markdown
-![Home screen](assets/Home.jpg)
+![Animal Speak home screen](assets/Home.jpg)
 ![Bird mode](assets/Birds.jpg)
 ![Aquarium mode](assets/Aquarium.jpg)
 ![Safari mode](assets/Safari.jpg)
