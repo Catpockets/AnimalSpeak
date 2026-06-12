@@ -2,7 +2,7 @@
 
 **Animal Speak** is a gentle, animal-themed browser game designed for autistic children, early learners, and kids who enjoy calm interactive play.
 
-The game runs as a single HTML file, so it can be played directly in a browser without needing an app store, login, account, backend server, or installation. It was originally created for my son as a simple, joyful way to explore animals, hear animal names, and interact with friendly animated creatures.
+The game runs directly in the browser as a single-page static web app. It does not require an app store, login, account, backend server, database, build system, or installation. Animal Speak was originally created for my son as a simple, joyful way to explore animals, hear animal names, and interact with friendly animated creatures.
 
 ## 🌿 What It Is
 
@@ -21,14 +21,14 @@ The game also includes a simple built-in **Talk board** inspired by AAC communic
 * Spoken animal names using browser speech
 * Simple AAC-style Talk board
 * Touch-friendly buttons for tablets
-* Designed for calm play
+* Designed for calm, predictable play
 * No score
 * No losing
 * No ads
 * No accounts
 * No reading required
 * No time pressure
-* Works as a standalone HTML file
+* Works as a static browser game
 
 ## 🧩 Why I Made This
 
@@ -44,7 +44,7 @@ Animal Speak includes a very simple Talk board to support early communication.
 
 This is not intended to replace a dedicated AAC device or professional communication system. It is a small built-in support feature for play, practice, and expression inside the game.
 
-The Talk board currently includes basic communication buttons like:
+The Talk board currently includes basic communication buttons such as:
 
 * Yes
 * No
@@ -70,47 +70,25 @@ Examples:
 
 The design is intentionally simple: tap, watch, listen, enjoy.
 
-## 📱 How to Play
+## 📱 Play Online
 
-Open the game in any modern browser:
+Animal Speak is hosted with GitHub Pages:
 
-```text
-index.html
-```
-
-If hosted with GitHub Pages, open the published GitHub Pages link on a tablet, phone, laptop, or desktop browser.
-
-## 🚀 Hosting on GitHub Pages
-
-1. Create a new GitHub repository named `AnimalSpeak`.
-2. Add the game file as `index.html`.
-3. Add this `README.md`.
-4. Commit and push the files.
-5. Go to the repository settings.
-6. Open **Pages**.
-7. Set the source to the `main` branch and `/root` folder.
-8. Open the published GitHub Pages URL on a tablet.
-
-Example repository structure:
-
-```text
-AnimalSpeak/
-├── index.html
-├── README.md
-└── LICENSE.md
-```
-
-The published game will usually be available at:
-
-```text
-https://your-github-username.github.io/AnimalSpeak/
-```
+https://catpockets.github.io/AnimalSpeak/
 
 ## 🍎 Tablet Use
 
 Animal Speak is designed to work well on tablets.
 
-For iPad, open the GitHub Pages link in Safari and use **Add to Home Screen** so it feels more like a standalone app.
+For iPad:
+
+1. Open the Animal Speak link in Safari.
+2. Tap the Share button.
+3. Select **Add to Home Screen**.
+4. Name it **Animal Speak**.
+5. Tap **Add**.
+
+The game will then appear on the tablet home screen like an app.
 
 ## 🛠️ Tech Stack
 
@@ -122,6 +100,8 @@ Animal Speak is built with:
 * Inline SVG artwork
 * Browser speech synthesis
 * Browser audio features
+* Web app manifest support
+* Static hosting through GitHub Pages
 
 There is no build system, package manager, database, or server required.
 
@@ -139,10 +119,6 @@ Animal Speak is designed to be:
 * Supportive of cause-and-effect learning
 
 The game avoids failure states, timers, competitive scoring, and punishment loops.
-
-## 🖼️ Screenshots
-
-Screenshots can be added here later.
 
 ## 🖼️ Screenshots
 
@@ -166,20 +142,37 @@ Screenshots can be added here later.
 
 ![Animal Speak talk board](assets/Talk.jpg)
 
+## 📁 Repository Structure
+
+```text
+AnimalSpeak/
+├── index.html
+├── manifest.json
+├── README.md
+├── LICENSE.md
+└── assets/
+    ├── Aquarium.jpg
+    ├── Birds.jpg
+    ├── Home.jpg
+    ├── Safari.jpg
+    ├── Talk.jpg
+    └── jellyfish-icon.png
+```
+
 ## 🧪 Project Status
 
-This is an early personal project and a work in progress.
+Animal Speak is an early personal project and a work in progress.
 
-Possible future improvements:
+Planned and possible future improvements include:
 
 * More AAC buttons
 * Customizable Talk board
-* Parent/teacher settings
+* Parent and teacher settings
 * More animals
 * More interaction types
 * Optional reduced-motion mode
 * Optional high-contrast mode
-* Offline/PWA support
+* Offline/PWA improvements
 * Saved preferences
 * Multiple voice options
 
