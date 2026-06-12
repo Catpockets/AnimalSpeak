@@ -6,7 +6,7 @@ The game runs as a single HTML file, so it can be played directly in a browser w
 
 ## 🌿 What It Is
 
-Animal Friends is a touch-friendly animal exploration game with three interactive worlds:
+Animal Speak is a touch-friendly animal exploration game with three interactive worlds:
 
 * **Safari** — search for animals in a calm safari hide-and-seek world.
 * **Aquarium** — explore an underwater coral reef and tap sea animals to see them move, play, or react.
@@ -32,15 +32,15 @@ The game also includes a simple built-in **Talk board** inspired by AAC communic
 
 ## 🧩 Why I Made This
 
-I built Animal Friends for my autistic son.
+I built Animal Speak for my autistic son.
 
 Many games for kids are too loud, too fast, too distracting, or built around winning and losing. I wanted something slower, softer, and more predictable — a game where the goal is simply to explore, tap animals, hear their names, and enjoy cause-and-effect interactions.
 
-Animal Friends is designed around joy, familiarity, and accessibility instead of competition.
+Animal Speak is designed around joy, familiarity, and accessibility instead of competition.
 
 ## 🗣️ AAC / Talk Board
 
-Animal Friends includes a very simple Talk board to support early communication.
+Animal Speak includes a very simple Talk board to support early communication.
 
 This is not intended to replace a dedicated AAC device or professional communication system. It is a small built-in support feature for play, practice, and expression inside the game.
 
@@ -75,47 +75,46 @@ The design is intentionally simple: tap, watch, listen, enjoy.
 Open the game in any modern browser:
 
 ```text
-AnimalFriends.html
-```
-
-For GitHub Pages, rename the file to:
-
-```text
 index.html
 ```
 
-Then enable GitHub Pages for the repository.
-
-Once hosted, the game can be opened directly on a tablet using the GitHub Pages link.
+If hosted with GitHub Pages, open the published GitHub Pages link on a tablet, phone, laptop, or desktop browser.
 
 ## 🚀 Hosting on GitHub Pages
 
-1. Create a new GitHub repository.
-2. Add the game file.
-3. Rename `AnimalFriends.html` to `index.html`.
-4. Commit and push the file.
+1. Create a new GitHub repository named `AnimalSpeak`.
+2. Add the game file as `index.html`.
+3. Add this `README.md`.
+4. Commit and push the files.
 5. Go to the repository settings.
 6. Open **Pages**.
-7. Set the source to the main branch.
+7. Set the source to the `main` branch and `/root` folder.
 8. Open the published GitHub Pages URL on a tablet.
 
 Example repository structure:
 
 ```text
-animal-friends/
+AnimalSpeak/
 ├── index.html
-└── README.md
+├── README.md
+└── LICENSE.md
+```
+
+The published game will usually be available at:
+
+```text
+https://your-github-username.github.io/AnimalSpeak/
 ```
 
 ## 🍎 Tablet Use
 
-Animal Friends is designed to work well on tablets.
+Animal Speak is designed to work well on tablets.
 
-For iPad, you can open the GitHub Pages link in Safari and use **Add to Home Screen** so it feels more like a standalone app.
+For iPad, open the GitHub Pages link in Safari and use **Add to Home Screen** so it feels more like a standalone app.
 
 ## 🛠️ Tech Stack
 
-Animal Friends is built with:
+Animal Speak is built with:
 
 * HTML
 * CSS
@@ -128,7 +127,7 @@ There is no build system, package manager, database, or server required.
 
 ## ♿ Accessibility Design Goals
 
-Animal Friends is designed to be:
+Animal Speak is designed to be:
 
 * Calm
 * Predictable
@@ -171,16 +170,21 @@ Possible future improvements:
 
 ## ❤️ Made With Love
 
-Animal Friends was made for my son and for kids like him.
+Animal Speak was made for my son and for kids like him.
 
-The goal is simple: create a safe, happy little world where children can explore animals, communicate, and play at their own pace.
+My mission is to make sure this remains free and available for children, families, teachers, therapists, and caregivers who need gentle, accessible learning tools.
+
+This project is shared in that spirit: to help children explore, communicate, and play at their own pace.
 
 ## 📄 License
 
-Choose a license before publishing.
+Animal Speak is intended to remain free for children and families who need it.
 
-Recommended options:
+This project uses a dual-license approach:
 
-* **MIT License** if you want others to freely use, modify, and build on it.
-* **Creative Commons BY-NC** if you want people to use it non-commercially while giving credit.
-* **All Rights Reserved** if you want to keep full control for now.
+* **Code:** GNU General Public License v3.0
+* **Artwork, documentation, and educational content:** Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+
+This means the code can be studied, shared, and improved, while the child-focused creative content is protected from commercial exploitation.
+
+See `LICENSE.md` for details.
