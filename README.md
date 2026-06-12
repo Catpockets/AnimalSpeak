@@ -145,10 +145,11 @@ The game avoids failure states, timers, competitive scoring, and punishment loop
 Screenshots can be added here later.
 
 ```markdown
-![Home screen](screenshots/home.png)
-![Aquarium mode](screenshots/aquarium.png)
-![Safari mode](screenshots/safari.png)
-![Talk board](screenshots/talk-board.png)
+![Home screen](assets/Home.jpg)
+![Bird mode](assets/Birds.jpg)
+![Aquarium mode](assets/Aquarium.jpg)
+![Safari mode](assets/Safari.jpg)
+![Talk board](assets/Talk.jpg)
 ```
 
 ## 🧪 Project Status
