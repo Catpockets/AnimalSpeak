@@ -1,7 +1,8 @@
 # Animal Speak
 
 
-**How to play**
+**How to play:**
+
 Animal Speak is available on any device through the following URL:
 
 https://catpockets.github.io/AnimalSpeak/
