@@ -258,6 +258,19 @@
   .swimmer { position:absolute; left:0; top:0; will-change:transform; cursor:pointer; pointer-events:auto; }
   .swimmer .inner { width:100%; height:100%; }
   .swimmer svg { width:100%; height:100%; display:block; pointer-events:none; }
+  /* tightHit: only the painted shape is clickable, not the transparent box around it.
+     pointer-events is inherited, so none cascades to .inner and the <svg> root;
+     the shape elements opt back in (auto = visiblePainted), and taps on them bubble
+     up to the pointerdown handler on the outer element. */
+  .tightHit { pointer-events:none; }
+  .tightHit svg { pointer-events:none; }
+  .tightHit svg path,
+  .tightHit svg circle,
+  .tightHit svg ellipse,
+  .tightHit svg rect,
+  .tightHit svg polygon,
+  .tightHit svg polyline,
+  .tightHit svg line { pointer-events:auto; }
   .inner.jelly { animation: jellyPulse 2.6s ease-in-out infinite; transform-origin:50% 25%; }
   @keyframes jellyPulse { 0%,100%{transform:scaleY(1) scaleX(1)} 50%{transform:scaleY(.92) scaleX(1.05)} }
   .inner.spin { animation: spinA 1s ease; }
@@ -1422,7 +1435,7 @@ function pickSpecies(){
 function spawnSwimmer(id, midway){
   const cfg = AQUA_CFG[id], size = cfg.w * vminPx;
   const el = document.createElement('div');
-  el.className = 'swimmer';
+  el.className = 'swimmer tightHit';
   el.style.width = el.style.height = size + 'px';
   el.style.zIndex = Math.round(cfg.w);
   const inner = document.createElement('div');
@@ -1778,7 +1791,7 @@ function makeSpot(sc, o){
   animalEl.className = 'animalEl';
   if(o.animal) animalEl.innerHTML = FULLART[o.animal] || ART[o.animal];
   const obEl = document.createElement('div');
-  obEl.className = 'obstacleEl';
+  obEl.className = 'obstacleEl tightHit';
   obEl.innerHTML = OBSTACLES[o.type];
   spot.appendChild(animalEl);
   spot.appendChild(obEl);
@@ -1879,7 +1892,7 @@ function pickBirdSpecies(){
 function spawnBird(id, midway){
   const cfg = BIRD_CFG[id], size = cfg.w * vminPx;
   const el = document.createElement('div');
-  el.className = 'birdEl';
+  el.className = 'birdEl tightHit';
   el.style.width = el.style.height = size + 'px';
   el.style.zIndex = Math.round(cfg.w);
   const inner = document.createElement('div');
