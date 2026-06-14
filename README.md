@@ -1,5 +1,12 @@
 # Animal Speak
 
+
+**How to play:**
+
+Animal Speak is available on any device through the following URL:
+
+https://catpockets.github.io/AnimalSpeak/
+
 **Animal Speak** is a gentle, animal-themed browser game designed for autistic children, early learners, and kids who enjoy calm interactive play.
 
 The game runs directly in the browser as a single-page static web app. It does not require an app store, login, account, backend server, database, build system, or installation. Animal Speak was originally created for my son as a simple, joyful way to explore animals, hear animal names, and interact with friendly animated creatures.
