@@ -1,7 +1,7 @@
 # Animal Speak
 
 
-**How to play:**
+ ## 📱 How to play
 
 Animal Speak is available on any device through the following URL:
 
@@ -76,12 +76,6 @@ Examples:
 * Tap safari hiding spots to discover animals.
 
 The design is intentionally simple: tap, watch, listen, enjoy.
-
-## 📱 Play Online
-
-Animal Speak is hosted with GitHub Pages:
-
-https://catpockets.github.io/AnimalSpeak/
 
 ## 🍎 Tablet Use
 
