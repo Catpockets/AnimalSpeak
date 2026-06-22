@@ -247,10 +247,10 @@
     background:linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,0));
     transform:skewX(-13deg); animation:rayShift 9s ease-in-out infinite; }
   @keyframes rayShift { 0%,100%{opacity:.45} 50%{opacity:.95} }
-  .sand  { position:absolute; bottom:0; left:-4%; width:108%; height:11%; pointer-events:none;
-    background:#EAD79F; border-radius:50% 50% 0 0 / 70% 70% 0 0; height:13%; }
-  .sand2 { position:absolute; bottom:0; left:-4%; width:108%; height:5%; pointer-events:none;
-    background:#DFC98B; border-radius:50% 50% 0 0 / 80% 80% 0 0; height:6%; }
+  .sand  { position:absolute; bottom:0; left:-4%; width:108%; height:13vmin; pointer-events:none;
+    background:#EAD79F; border-radius:50% 50% 0 0 / 70% 70% 0 0; }
+  .sand2 { position:absolute; bottom:0; left:-4%; width:108%; height:20vmin; pointer-events:none;
+    background:#DFC98B; border-radius:50% 50% 0 0 / 80% 80% 0 0; }
   #tankDecor svg { position:absolute; pointer-events:none; }
   .sway { transform-origin:50% 100%; animation:swayA 5.5s ease-in-out infinite alternate; }
   @keyframes swayA { from{transform:rotate(-5deg)} to{transform:rotate(5deg)} }
@@ -703,9 +703,9 @@ ART.gardeneel = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <circle cx="149" cy="114" r="8" fill="#B8C87A"/><circle cx="146" cy="111" r="2.6" fill="#3E4A18"/>
     <circle cx="58" cy="138" r="2.5" fill="#D6D67A"/><circle cx="99" cy="132" r="2.5" fill="#D6D67A"/><circle cx="147" cy="142" r="2.5" fill="#D6D67A"/>
   </g>
-  <ellipse cx="55" cy="182" rx="22" ry="9" fill="#E8D7A0"/>
-  <ellipse cx="100" cy="184" rx="24" ry="9" fill="#E0CD92"/>
-  <ellipse cx="145" cy="182" rx="22" ry="9" fill="#E8D7A0"/>
+  <ellipse cx="55" cy="188" rx="24" ry="18" fill="#E8D7A0"/>
+  <ellipse cx="100" cy="190" rx="26" ry="18" fill="#E0CD92"/>
+  <ellipse cx="145" cy="188" rx="24" ry="18" fill="#E8D7A0"/>
 </svg>`;
 
 ART.treasure = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -1469,6 +1469,48 @@ function spawnSwimmer(id, midway){
 }
 function removeSwimmer(i){ swimmers[i].el.remove(); swimmers.splice(i, 1); }
 
+/* Seat a bottom-dwelling creature relative to the tank's bottom edge, sized in vmin
+   so it stays planted on the sea floor across any viewport / aspect ratio.
+   xFrac   = horizontal position as a fraction of tank width
+   dVmin   = how far the creature's visual base sits above the bottom edge, in vmin
+   abFrac  = where the creature's base falls inside its own 200x200 box (0=top,1=bottom)
+   keepX   = if true, applySeat won't reset x (used for the crab, which walks)        */
+function seatFloor(s, xFrac, dVmin, abFrac, keepX){
+  s.seat = { xFrac, d: dVmin, ab: abFrac, keepX: !!keepX };
+  applySeat(s);
+}
+function applySeat(s){
+  const q = s.seat;
+  if(!q.keepX) s.x = tankW * q.xFrac;
+  s.y = s.baseY = tankH - q.d * vminPx - q.ab * s.size;
+}
+/* Re-fit the whole aquarium when the viewport changes (resize / rotate). Creature
+   sizes are recomputed, seated creatures re-anchored to the floor, and free swimmers
+   scaled proportionally so nothing jumps off-screen. */
+function relayoutAqua(){
+  if(!aquaActive) return;
+  const oldW = tankW, oldH = tankH;
+  measureTank();
+  if(!oldW || !oldH) return;
+  const sx = tankW / oldW, sy = tankH / oldH;
+  swimmers.forEach(s => {
+    s.size = s.cfg.w * vminPx;
+    s.el.style.width = s.el.style.height = s.size + 'px';
+    s.bobAmp = s.size * .06;
+    if(s.seat){
+      if(s.seat.keepX) s.x *= sx;
+      applySeat(s);
+    } else {
+      s.x *= sx; s.y *= sy; s.baseY *= sy;
+      if(s.driftX) s.driftX *= sx;
+    }
+  });
+}
+let aquaRelayoutTimer;
+function onAquaResize(){ clearTimeout(aquaRelayoutTimer); aquaRelayoutTimer = setTimeout(relayoutAqua, 120); }
+addEventListener('resize', onAquaResize);
+addEventListener('orientationchange', onAquaResize);
+
 function aquaTick(ts){
   if(!aquaActive) return;
   requestAnimationFrame(aquaTick);
@@ -1664,24 +1706,17 @@ function startAqua(){
   $('tankCreatures').innerHTML = '';
   $('tankFx').innerHTML = '';
   swimmers = [];
-  const st1 = spawnSwimmer('starfish', true);
-  st1.x = tankW * .16; st1.y = st1.baseY = tankH * .84;
-  const st2 = spawnSwimmer('starfish', true);
-  st2.x = tankW * .68; st2.y = st2.baseY = tankH * .87;
-  const an1 = spawnSwimmer('anemone', true);
-  an1.x = tankW * .30; an1.y = an1.baseY = tankH * .74;
-  const an2 = spawnSwimmer('anemone', true);
-  an2.x = tankW * .84; an2.y = an2.baseY = tankH * .72;
-  const cl = spawnSwimmer('clam', true);
-  cl.x = tankW * .47; cl.y = cl.baseY = tankH * .84;
-  const ur = spawnSwimmer('urchin', true);
-  ur.x = tankW * .21; ur.y = ur.baseY = tankH * .80;
-  const hc = spawnSwimmer('hermitcrab', true);
-  hc.x = tankW * .63; hc.y = hc.baseY = tankH * .85;
-  const ge = spawnSwimmer('gardeneel', true);
-  ge.x = tankW * .38; ge.y = ge.baseY = tankH * .76;
-  const tr = spawnSwimmer('treasure', true);
-  tr.x = tankW * .75; tr.y = tr.baseY = tankH * .82;
+  const st1 = spawnSwimmer('starfish', true);  seatFloor(st1, .16, 7.9, .90);
+  const st2 = spawnSwimmer('starfish', true);  seatFloor(st2, .68, 6.9, .90);
+  const an1 = spawnSwimmer('anemone', true);   seatFloor(an1, .30, 7.1, .84);
+  const an2 = spawnSwimmer('anemone', true);   seatFloor(an2, .84, 9.1, .84);
+  const cl = spawnSwimmer('clam', true);       seatFloor(cl, .47, 4.4, .86);
+  const ur = spawnSwimmer('urchin', true);     seatFloor(ur, .21, 10.6, .85);
+  const hc = spawnSwimmer('hermitcrab', true); seatFloor(hc, .54, 5.4, .80);
+  const ge = spawnSwimmer('gardeneel', true);  seatFloor(ge, .38, 4.5, .90);
+  const tr = spawnSwimmer('treasure', true);   seatFloor(tr, .75, 5.0, .81);
+  const cb = spawnSwimmer('crab', true);       cb.x = tankW * .78; seatFloor(cb, .78, 4.9, .74, true);
+  cb.el.style.zIndex = 65;
   for(let i = 0; i < 5; i++){
     const id = pickSpecies();
     if(id) spawnSwimmer(id, true);
