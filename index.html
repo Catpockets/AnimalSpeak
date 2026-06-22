@@ -143,10 +143,21 @@
   }
   /* Heron: holds dead still, then one fast calculated downward stab of the head */
   .heronHead { transform-box:fill-box; transform-origin:64% 100%; }
-  .inner.heronStrike .heronHead { animation: heronStrikeA 1.7s ease-in; }
+  .inner.heronStrike .heronHead { animation: heronStrikeA .9s ease-out; }
   @keyframes heronStrikeA {
-    0%,62%{transform:rotate(0)} 71%{transform:rotate(66deg)} 80%{transform:rotate(66deg)} 100%{transform:rotate(0)}
+    0%{transform:rotate(0)} 20%{transform:rotate(-70deg)} 42%{transform:rotate(-70deg)} 100%{transform:rotate(0)}
   }
+  /* Startled bird: body bobs while a pair of wings flaps behind it as it flees */
+  .inner.birdPanic { animation: birdPanicA .2s ease-in-out infinite; }
+  @keyframes birdPanicA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+  .flyWings { position:absolute; inset:0; z-index:-1; pointer-events:none; }
+  .flyWings svg { width:100%; height:100%; display:block; }
+  .flyWingL { transform-box:fill-box; transform-origin:96% 84%; animation: flyWingLA .2s ease-in-out infinite; }
+  .flyWingR { transform-box:fill-box; transform-origin:4% 84%; animation: flyWingRA .2s ease-in-out infinite; }
+  @keyframes flyWingLA { 0%,100%{transform:rotate(-26deg)} 50%{transform:rotate(16deg)} }
+  @keyframes flyWingRA { 0%,100%{transform:rotate(26deg)} 50%{transform:rotate(-16deg)} }
+  /* Clickable bush hotspot that flushes a quail */
+  #bushSpot { position:absolute; left:38%; bottom:9%; width:18vmin; height:15vmin; cursor:pointer; pointer-events:auto; }
   .fishP { position:absolute; animation: fishA 1.3s ease forwards; }
   .fishP svg { width:100%; height:100%; }
   @keyframes fishA { 0%{transform:translateY(5vmin) rotate(0); opacity:0} 25%{opacity:1} 100%{transform:translate(1vmin,-6vmin) rotate(-50deg); opacity:0} }
@@ -1131,6 +1142,19 @@ ART.seagull = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <circle cx="73" cy="88" r="3" fill="#1E242A"/><circle cx="74.2" cy="86.8" r="1" fill="#FFF"/>
 </svg>`;
 
+ART.quail = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="112" cy="130" rx="40" ry="32" fill="#A6794E"/>
+  <ellipse cx="104" cy="148" rx="26" ry="15" fill="#C8A574"/>
+  <path d="M140 120 q18 6 22 18 q-14 4 -28 -8 z" fill="#8A5E36"/>
+  <circle cx="78" cy="104" r="22" fill="#8A5E36"/>
+  <path d="M74 84 Q66 56 84 48 Q78 68 88 84 Z" fill="#2E2113"/>
+  <path d="M58 104 l-15 3 l14 5 z" fill="#E0A23C"/>
+  <circle cx="72" cy="100" r="3.4" fill="#F5EAD8"/><circle cx="72" cy="100" r="1.7" fill="#1A140C"/>
+  <path d="M88 96 q10 -4 20 0" stroke="#C8A574" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M62 116 q6 4 14 2" stroke="#3A2A1A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M104 160 v12 M118 160 v12" stroke="#C98A4A" stroke-width="4" stroke-linecap="round"/>
+</svg>`;
+
 const NOTE_SVG = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="30" rx="7" ry="5" fill="#5B4632"/><path d="M19 30 V8 q10 2 12 8" stroke="#5B4632" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`;
 const FISH_SVG = `<svg viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg"><ellipse cx="24" cy="15" rx="17" ry="9" fill="#9AB8C8"/><path d="M38 15 l12 -8 v16 z" fill="#7E9AAB"/><circle cx="14" cy="13" r="2.2" fill="#1E2A32"/></svg>`;
 const FEATHER_SVG = `<svg viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg"><path d="M20 4 Q34 20 30 42 Q26 54 20 56 Q14 54 10 42 Q6 20 20 4 Z" fill="#F2F0E8" stroke="#D8D4C8" stroke-width="2"/><path d="M20 10 V52" stroke="#C9C4B4" stroke-width="2"/></svg>`;
@@ -1172,6 +1196,7 @@ const CREATURES = [
   { id:'goose',         name:'Canada Goose',  world:'birds' },
   { id:'chicken',       name:'Chicken',       world:'birds' },
   { id:'duck',          name:'Duck',          world:'birds' },
+  { id:'quail',         name:'Quail',         world:'birds' },
   { id:'ibis',          name:'Ibis',          world:'birds' },
   { id:'heron',         name:'Heron',         world:'birds' },
   { id:'hummingbird',   name:'Hummingbird',   world:'birds' },
@@ -1946,6 +1971,7 @@ const BIRD_CFG = {
   seagull:    { w:17, band:[.08,.32], spd:[ 6, 9], type:'fly',    act:actGull,  max:2, wt:1.5 },
   chicken:    { w:16, band:[.84,.84], spd:[ 3, 5], type:'ground', act:actEgg,   max:2, wt:2   },
   duck:       { w:15, band:[.86,.86], spd:[ 3, 5], type:'ground', act:actDuckFly, max:2, wt:2   },
+  quail:      { w:11, band:[.88,.88], spd:[ 5, 7], type:'ground', act:actQuack,   max:1, wt:0   },
   ibis:       { w:18, band:[.85,.85], spd:[2.5,4], type:'ground', act:actProbe, max:1, wt:1.5 },
   heron:      { w:26, band:[0,0],     spd:[0,0],   type:'static', act:actSpear, max:1, wt:0   },
   owl:        { w:15, band:[0,0],     spd:[0,0],   type:'static', act:actHoo,   max:1, wt:0   },
@@ -1975,6 +2001,7 @@ function spawnBird(id, midway){
   el.className = 'birdEl tightHit';
   el.style.width = el.style.height = size + 'px';
   el.style.zIndex = Math.round(cfg.w);
+  if(id === 'ibis') el.style.zIndex = 2;   // behind other birds, still above the pond
   const inner = document.createElement('div');
   inner.className = 'inner';
   inner.innerHTML = ART[id];
@@ -1990,7 +2017,7 @@ function spawnBird(id, midway){
   };
   if(cfg.type === 'ground'){
     b.y = avH * .96 - size;
-    b.x = Math.random() * (avW - size);
+    b.x = b.dir < 0 ? avW + size : -size;   // walk in from off-screen
   } else if(cfg.type === 'hover'){
     b.y = avH * (cfg.band[0] + Math.random() * (cfg.band[1] - cfg.band[0]));
     b.x = Math.random() * (avW - size);
@@ -2023,7 +2050,7 @@ function birdTick(ts){
     const b = birds[i];
     b.t += dt;
     if(b.flyAway){
-      b.x += b.dir * (b.speed * 1.7) * avW * dt;
+      b.x += b.dir * b.escapeVx * avW * dt;
       b.y -= b.escapeVy * vminPx * dt;
       b.el.style.transform = 'translate3d(' + b.x + 'px,' + b.y + 'px,0) scaleX(' + (b.dir > 0 ? -1 : 1) + ')';
       if(b.y < -b.size * 1.8){ removeBird(i); }
@@ -2056,17 +2083,56 @@ function birdTick(ts){
   }
 }
 
+/* These birds do their trick when tapped. Tap them again WHILE the trick is still
+   playing and they get annoyed and fly off; once it has finished they'll happily
+   do it again. (The duck flies on its very first tap; the chicken never leaves.) */
+const ANNOY_FLY = { owl:1, ibis:1, woodpecker:1, heron:1 };
 function tapBird(b){
-  if(b.acting) return;
+  if(b.flyAway) return;
+  if(b.acting){                       // interaction still playing
+    if(ANNOY_FLY[b.id]){
+      b.inner.classList.remove('soar','hopB','peck','drum','hoo','wiggle','owlLook','heronStrike');
+      speak('Bye bye!');
+      flyOff(b);
+    }
+    return;                           // (non-annoyable birds just ignore the extra tap)
+  }
   b.acting = true;
   const c = CREATURES.find(c => c.id === b.id);
   const dur = b.cfg.act(b) || 1000;
-  setTimeout(() => speak(c.say || c.name), 350);
+  setTimeout(() => speak((c && (c.say || c.name)) || ''), 350);
   setTimeout(() => {
     b.acting = false;
     b.inner.classList.remove('soar','hopB','peck','drum','hoo','wiggle','owlLook','heronStrike');
   }, dur);
 }
+/* Generic "startled" exit: a pair of wings (tinted to the bird) flap behind it as
+   it flutters up and off-screen. */
+const FLY_WING = { owl:['#9A744A','#7A5A38'], ibis:['#E8E8E0','#C4C4BC'], woodpecker:['#3A3A36','#1A1A18'],
+                   heron:['#6E8CA6','#54748C'], quail:['#8A5E36','#664326'] };
+function addFlyWings(b){
+  const c = FLY_WING[b.id] || ['#E0DDD4','#A8A49A'];
+  const w = document.createElement('div');
+  w.className = 'flyWings';
+  w.innerHTML = '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+    '<g class="flyWingL"><path d="M104 98 Q64 58 28 66 Q54 96 100 108 Z" fill="' + c[0] + '" stroke="' + c[1] + '" stroke-width="3"/></g>' +
+    '<g class="flyWingR"><path d="M96 98 Q136 58 172 66 Q146 96 100 108 Z" fill="' + c[0] + '" stroke="' + c[1] + '" stroke-width="3"/></g>' +
+    '</svg>';
+  b.el.appendChild(w);
+}
+function flyOff(b){
+  if(b.flyAway) return;
+  b.flyAway = true;
+  b.acting = true;
+  b.dir = b.x < avW * .5 ? 1 : -1;        // veer toward the open sky, not the near edge
+  b.escapeVx = .05 + Math.random() * .05;
+  b.escapeVy = 30 + Math.random() * 12;
+  addFlyWings(b);
+  b.inner.classList.add('birdPanic');
+  sfxFlush();
+  featherDrop(b.x + b.size * .35, b.y + b.size * .4);
+}
+function sfxFlush(){ if(!soundOn) return; for(let i = 0; i < 6; i++) tone(150 + Math.random() * 50, i * .05, .05, .04, 'sawtooth'); }
 
 /* --- bird voices (synth) --- */
 function sfxEagle()    { glide(1900, 700, .6, .08, 'sine'); glide(1700, 650, .55, .07, 'sine', .7); }
@@ -2107,18 +2173,18 @@ function actZip(b){
   return 950;
 }
 function actSpear(b){
-  b.inner.classList.add('heronStrike');          // poised, then one fast head stab
-  setTimeout(() => sfxHeronCk(), 1040);
-  setTimeout(() => pondSplash(b), 1120);
-  setTimeout(() => fishCatch(b), 1240);
-  return 1750;
+  b.inner.classList.add('heronStrike');          // immediate downward stab
+  setTimeout(() => { if(!b.flyAway) sfxHeronCk(); }, 100);
+  setTimeout(() => { if(!b.flyAway) pondSplash(b); }, 180);
+  setTimeout(() => { if(!b.flyAway) fishCatch(b); }, 280);
+  return 950;
 }
 function fishCatch(b){
   const f = document.createElement('div');
   f.className = 'fishP';
   f.style.width = '5vmin'; f.style.height = '2.5vmin';
-  f.style.left = (b.x + b.size * .10) + 'px';
-  f.style.top = (b.y + b.size * .52) + 'px';
+  f.style.left = (b.x + b.size * .02) + 'px';
+  f.style.top = (b.y + b.size * .55) + 'px';
   f.innerHTML = FISH_SVG;
   $('birdFx').appendChild(f);
   setTimeout(() => f.remove(), 1400);
@@ -2134,6 +2200,7 @@ function actDuckFly(b){
   featherDrop(b.x + b.size * .30, b.y + b.size * .42);
   featherDrop(b.x + b.size * .55, b.y + b.size * .52);
   b.flyAway = true;                        // birdTick takes it up and off-screen
+  b.escapeVx = b.speed * 1.7;
   b.escapeVy = 34 + Math.random() * 12;
   return 4000;
 }
@@ -2207,6 +2274,42 @@ function featherDrop(x, y){
   setTimeout(() => f.remove(), 3400);
 }
 
+function sfxQuailCall(){ if(!soundOn) return; glide(1100, 1600, .10, .08, 'sine'); glide(900, 1400, .12, .08, 'sine', .16); tone(1500, .32, .10, .07, 'sine'); }
+/* A hidden quail tucked in the berry bush. Tapping the bush flushes it: the quail
+   bursts out and immediately flies away (like a real flushed quail). */
+function buildBush(){
+  const old = $('bushSpot'); if(old) old.remove();
+  const spot = document.createElement('div');
+  spot.id = 'bushSpot';
+  spot.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); flushQuail(); });
+  $('aviary').appendChild(spot);
+}
+function flushQuail(){
+  if(!birdsActive || birds.some(b => b.id === 'quail')) return;   // one at a time
+  const q = spawnBird('quail', true);
+  q.x = avW * .40 + 7 * vminPx - q.size * .5;
+  q.y = q.baseY = avH * .90 - q.size;
+  q.dir = q.x > avW * .5 ? -1 : 1;        // head toward the open sky
+  q.el.style.zIndex = 45;
+  bushRustle();
+  sfxQuailCall();
+  speak('A quail!');
+  flyOff(q);
+}
+function bushRustle(){
+  for(let i = 0; i < 7; i++){
+    const l = document.createElement('div');
+    l.className = 'chipP';
+    l.style.background = i % 2 ? '#5E9A4E' : '#6FAE5C';
+    l.style.left = (avW * .40 + (2 + Math.random() * 9) * vminPx) + 'px';
+    l.style.top = (avH * .90 - (1 + Math.random() * 5) * vminPx) + 'px';
+    l.style.setProperty('--dx', ((Math.random() * 8 - 4)) + 'vmin');
+    l.style.setProperty('--dy', (-(1 + Math.random() * 3)) + 'vmin');
+    $('birdFx').appendChild(l);
+    setTimeout(() => l.remove(), 900);
+  }
+}
+
 /* --- scene --- */
 function buildAviary(){
   $('aviaryDecor').innerHTML = `
@@ -2233,6 +2336,7 @@ function startBirds(){
   speak('Welcome to the aviary!');
   measureAviary();
   buildAviary();
+  buildBush();
   $('birdLayer').innerHTML = '';
   $('birdFx').innerHTML = '';
   birds = [];
@@ -2258,6 +2362,7 @@ function startBirds(){
 function stopBirds(){
   birdsActive = false;
   birds = [];
+  const bs = $('bushSpot'); if(bs) bs.remove();
   if($('birdLayer')) $('birdLayer').innerHTML = '';
   if($('birdFx')) $('birdFx').innerHTML = '';
 }
