@@ -116,8 +116,24 @@
   .birdEl svg { width:100%; height:100%; display:block; pointer-events:none; }
   #birdFx { position:absolute; inset:0; pointer-events:none; z-index:30; }
   .hwings { animation: flutterA .14s linear infinite alternate; transform-box:fill-box; transform-origin:center; }
-  .fwing { animation: flapW .45s ease-in-out infinite alternate; transform-box:fill-box; transform-origin:15% 100%; }
-  @keyframes flapW { from{transform:rotate(4deg)} to{transform:rotate(-38deg)} }
+  /* Wing flap by folding flat <-> open (not swinging up into a spike). The wing art
+     points up from its root, so we keep rotation small/positive (a downbeat) and use
+     scaleY to fold the wing toward the body, then re-open. transform-origin is the
+     wing root (bottom-center of each wing's own box). */
+  .fwing { animation: flapW .5s ease-in-out infinite; transform-box:fill-box; transform-origin:50% 100%; }
+  @keyframes flapW {
+    0%   { transform: rotate(-4deg) scaleY(1);   }
+    50%  { transform: rotate(16deg) scaleY(.42); }
+    100% { transform: rotate(-4deg) scaleY(1);   }
+  }
+  .duckWing { animation: duckFlap .24s ease-in-out infinite; transform-box:fill-box; transform-origin:14% 92%; }
+  @keyframes duckFlap {
+    0%   { transform: rotate(-46deg) scaleY(1);  }
+    44%  { transform: rotate(32deg)  scaleY(1);  }
+    60%  { transform: rotate(18deg)  scaleY(.5); }
+    100% { transform: rotate(-46deg) scaleY(1);  }
+  }
+  .inner.duckEscape { transform: rotate(-24deg); transition: transform .25s ease; }
   .fishP { position:absolute; animation: fishA 1.3s ease forwards; }
   .fishP svg { width:100%; height:100%; }
   @keyframes fishA { 0%{transform:translateY(5vmin) rotate(0); opacity:0} 25%{opacity:1} 100%{transform:translate(1vmin,-6vmin) rotate(-50deg); opacity:0} }
@@ -329,7 +345,7 @@
   </div>
   <div id="worldDoors">
     <button class="door" id="door-safari"><span class="doorLabel">Safari</span></button>
-    <button class="door" id="door-birds"><span class="doorLabel">Birds</span></button>
+    <button class="door" id="door-birds"><span class="doorLabel">Aviary</span></button>
     <button class="door" id="door-aqua"><span class="doorLabel">Aquarium</span></button>
   </div>
   <button id="homeStickerBtn"><span id="homeStickerIcon"></span><span>Talk</span></button>
@@ -963,6 +979,20 @@ ART.duck = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <path d="M54 88 l-14 4 l14 5 z" fill="#E8C93C"/>
   <circle cx="62" cy="84" r="2.8" fill="#1E1A14"/><circle cx="63.2" cy="82.8" r="1" fill="#FFF"/>
   <path d="M100 136 v12 M116 136 v12" stroke="#E8893C" stroke-width="4" stroke-linecap="round"/>
+</svg>`;
+
+/* Duck Hunt-style flight pose (shape only): plump body, neck/head thrust up-forward,
+   short tail, and a big flapping wing. Faces left to match the standing duck. */
+ART.duckFly = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <path d="M148 118 q24 -8 34 2 q-12 16 -36 10 z" fill="#9A8B73"/>
+  <ellipse cx="110" cy="126" rx="42" ry="27" fill="#B5A68E"/>
+  <ellipse cx="100" cy="136" rx="30" ry="15" fill="#C6BBA3"/>
+  <path d="M118 110 Q150 124 170 156 Q138 146 114 126 Z" fill="#9A8B73"/>
+  <path d="M90 116 Q70 98 62 76" stroke="#B5A68E" stroke-width="21" fill="none" stroke-linecap="round"/>
+  <circle cx="60" cy="74" r="15" fill="#3E8A4E"/>
+  <path d="M48 74 l-16 5 l16 6 z" fill="#E8C93C"/>
+  <circle cx="56" cy="70" r="2.8" fill="#1E1A14"/><circle cx="57.2" cy="68.8" r="1" fill="#FFF"/>
+  <g class="duckWing"><path d="M106 106 Q118 54 170 40 Q150 88 130 112 Z" fill="#C6BBA3" stroke="#9A8B73" stroke-width="3"/></g>
 </svg>`;
 
 ART.ibis = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -1900,7 +1930,7 @@ const BIRD_CFG = {
   crow:       { w:16, band:[.10,.38], spd:[ 6, 9], type:'fly',    act:actCaw,   max:2, wt:1.5 },
   seagull:    { w:17, band:[.08,.32], spd:[ 6, 9], type:'fly',    act:actGull,  max:2, wt:1.5 },
   chicken:    { w:16, band:[.84,.84], spd:[ 3, 5], type:'ground', act:actEgg,   max:2, wt:2   },
-  duck:       { w:15, band:[.86,.86], spd:[ 3, 5], type:'ground', act:actQuack, max:2, wt:2   },
+  duck:       { w:15, band:[.86,.86], spd:[ 3, 5], type:'ground', act:actDuckFly, max:2, wt:2   },
   ibis:       { w:18, band:[.85,.85], spd:[2.5,4], type:'ground', act:actProbe, max:1, wt:1.5 },
   heron:      { w:26, band:[0,0],     spd:[0,0],   type:'static', act:actSpear, max:1, wt:0   },
   owl:        { w:15, band:[0,0],     spd:[0,0],   type:'static', act:actHoo,   max:1, wt:0   },
@@ -1977,6 +2007,13 @@ function birdTick(ts){
   for(let i = birds.length - 1; i >= 0; i--){
     const b = birds[i];
     b.t += dt;
+    if(b.flyAway){
+      b.x += b.dir * (b.speed * 1.7) * avW * dt;
+      b.y -= b.escapeVy * vminPx * dt;
+      b.el.style.transform = 'translate3d(' + b.x + 'px,' + b.y + 'px,0) scaleX(' + (b.dir > 0 ? -1 : 1) + ')';
+      if(b.y < -b.size * 1.8){ removeBird(i); }
+      continue;
+    }
     let flip = (b.cfg.type === 'fly' && b.dir > 0) ? -1 : 1;
     if(!b.paused){
       if(b.cfg.type === 'fly'){
@@ -2068,6 +2105,17 @@ function fishCatch(b){
 function actProbe(b){ b.inner.classList.add('peck'); sfxIbisG(); dirtPuff(b); return 1000; }
 function actHoo(b){ b.inner.classList.add('hoo'); sfxOwlHoo(); return 1300; }
 function actQuack(b){ b.inner.classList.add('wiggle'); sfxQuack(); return 900; }
+function actDuckFly(b){
+  sfxQuack();
+  setTimeout(() => sfxQuack(), 230);
+  b.inner.innerHTML = ART.duckFly;        // morph to the flushed flight pose
+  b.inner.classList.add('duckEscape');     // nose-up tilt (mirrored with facing)
+  featherDrop(b.x + b.size * .30, b.y + b.size * .42);
+  featherDrop(b.x + b.size * .55, b.y + b.size * .52);
+  b.flyAway = true;                        // birdTick takes it up and off-screen
+  b.escapeVy = 34 + Math.random() * 12;
+  return 4000;
+}
 function actClack(b){ b.inner.classList.add('peck'); sfxToucanC(); return 1000; }
 function actHello(b){ b.inner.classList.add('hopB'); sfxSquawk(); setTimeout(() => speak('Hello! Hello!'), 1300); return 2400; }
 function actDrum(b){ b.inner.classList.add('drum'); sfxDrumWood(); woodChips(b); return 1200; }
@@ -2161,7 +2209,7 @@ function startBirds(){
   $('bgScenery').innerHTML = '';
   showScreen('birdScene');
   chimeTap();
-  speak('Welcome to the birds!');
+  speak('Welcome to the aviary!');
   measureAviary();
   buildAviary();
   $('birdLayer').innerHTML = '';
