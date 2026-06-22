@@ -134,6 +134,19 @@
     100% { transform: rotate(-46deg) scaleY(1);  }
   }
   .inner.duckEscape { transform: rotate(-24deg); transition: transform .25s ease; }
+  /* Owl cocks/turns its head (ear tufts move with it) */
+  .owlHead { transform-box:fill-box; transform-origin:50% 100%; }
+  .inner.owlLook .owlHead { animation: owlLookA 1.6s ease-in-out; }
+  @keyframes owlLookA {
+    0%{transform:rotate(0)} 18%{transform:rotate(-26deg)} 42%{transform:rotate(-20deg)}
+    60%{transform:rotate(24deg)} 84%{transform:rotate(18deg)} 100%{transform:rotate(0)}
+  }
+  /* Heron: holds dead still, then one fast calculated downward stab of the head */
+  .heronHead { transform-box:fill-box; transform-origin:64% 100%; }
+  .inner.heronStrike .heronHead { animation: heronStrikeA 1.7s ease-in; }
+  @keyframes heronStrikeA {
+    0%,62%{transform:rotate(0)} 71%{transform:rotate(66deg)} 80%{transform:rotate(66deg)} 100%{transform:rotate(0)}
+  }
   .fishP { position:absolute; animation: fishA 1.3s ease forwards; }
   .fishP svg { width:100%; height:100%; }
   @keyframes fishA { 0%{transform:translateY(5vmin) rotate(0); opacity:0} 25%{opacity:1} 100%{transform:translate(1vmin,-6vmin) rotate(-50deg); opacity:0} }
@@ -935,9 +948,9 @@ ART.cardinal = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 </svg>`;
 
 ART.eagle = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <g class="fwing"><path d="M92 92 Q84 36 132 26 Q120 70 124 92 Z" fill="#4A3624"/></g>
   <ellipse cx="100" cy="104" rx="42" ry="20" fill="#5E4630"/>
   <path d="M134 100 q26 -6 34 4 q-12 12 -32 10 z" fill="#F5F2EA"/>
+  <g class="fwing"><path d="M92 92 Q84 36 132 26 Q120 70 124 92 Z" fill="#4A3624"/></g>
   <circle cx="60" cy="94" r="15" fill="#F5F2EA"/>
   <path d="M48 90 q-13 0 -13 9 q7 6 14 1 l-5 -4 z" fill="#E8B43C"/>
   <circle cx="57" cy="89" r="3.2" fill="#1E1A14"/><circle cx="58.4" cy="87.6" r="1.1" fill="#FFF"/>
@@ -984,15 +997,15 @@ ART.duck = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 /* Duck Hunt-style flight pose (shape only): plump body, neck/head thrust up-forward,
    short tail, and a big flapping wing. Faces left to match the standing duck. */
 ART.duckFly = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <path d="M148 118 q24 -8 34 2 q-12 16 -36 10 z" fill="#9A8B73"/>
+  <path d="M150 116 q22 -6 30 4 q-12 14 -34 8 z" fill="#9A8B73"/>
   <ellipse cx="110" cy="126" rx="42" ry="27" fill="#B5A68E"/>
-  <ellipse cx="100" cy="136" rx="30" ry="15" fill="#C6BBA3"/>
-  <path d="M118 110 Q150 124 170 156 Q138 146 114 126 Z" fill="#9A8B73"/>
+  <ellipse cx="108" cy="140" rx="26" ry="11" fill="#C6BBA3"/>
+  <ellipse cx="84" cy="130" rx="17" ry="14" fill="#8A5A3C"/>
   <path d="M90 116 Q70 98 62 76" stroke="#B5A68E" stroke-width="21" fill="none" stroke-linecap="round"/>
   <circle cx="60" cy="74" r="15" fill="#3E8A4E"/>
   <path d="M48 74 l-16 5 l16 6 z" fill="#E8C93C"/>
   <circle cx="56" cy="70" r="2.8" fill="#1E1A14"/><circle cx="57.2" cy="68.8" r="1" fill="#FFF"/>
-  <g class="duckWing"><path d="M106 106 Q118 54 170 40 Q150 88 130 112 Z" fill="#C6BBA3" stroke="#9A8B73" stroke-width="3"/></g>
+  <g class="duckWing"><path d="M104 108 Q116 56 168 42 Q150 90 128 114 Z" fill="#9A8B73" stroke="#7E715C" stroke-width="2"/></g>
 </svg>`;
 
 ART.ibis = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -1011,11 +1024,13 @@ ART.heron = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="112" cy="120" rx="38" ry="26" fill="#8FA8BD"/>
   <ellipse cx="122" cy="124" rx="22" ry="15" fill="#6E8CA6"/>
   <path d="M144 110 q14 -6 16 -16 q-12 0 -20 8 z" fill="#5E7E96"/>
-  <path d="M86 110 Q66 96 70 72 Q72 56 84 50" stroke="#B8C8D6" stroke-width="10" fill="none" stroke-linecap="round"/>
-  <circle cx="88" cy="46" r="12" fill="#B8C8D6"/>
-  <path d="M84 38 Q98 32 106 38" stroke="#2E3A46" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <path d="M78 46 L50 52 L78 53 Z" fill="#E8B45B"/>
-  <circle cx="84" cy="43" r="3" fill="#1E2630"/><circle cx="85.2" cy="41.8" r="1" fill="#FFF"/>
+  <g class="heronHead">
+    <path d="M86 110 Q66 96 70 72 Q72 56 84 50" stroke="#B8C8D6" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="88" cy="46" r="12" fill="#B8C8D6"/>
+    <path d="M84 38 Q98 32 106 38" stroke="#2E3A46" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M78 46 L50 52 L78 53 Z" fill="#E8B45B"/>
+    <circle cx="84" cy="43" r="3" fill="#1E2630"/><circle cx="85.2" cy="41.8" r="1" fill="#FFF"/>
+  </g>
   <path d="M104 144 v32 M118 144 v30" stroke="#6E6E5A" stroke-width="3.5" stroke-linecap="round"/>
 </svg>`;
 
@@ -1033,12 +1048,12 @@ ART.hummingbird = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"
 </svg>`;
 
 ART.owl = `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <path d="M76 56 L68 34 L90 50 Z" fill="#B08755"/>
-  <path d="M124 56 L132 34 L110 50 Z" fill="#B08755"/>
   <path d="M64 150 Q56 90 100 84 Q144 90 136 150 Q120 164 100 164 Q80 164 64 150 Z" fill="#B08755"/>
   <ellipse cx="100" cy="128" rx="26" ry="22" fill="#E8D7B0"/>
   <path d="M88 118 l8 8 l8 -8 M88 132 l8 8 l8 -8" stroke="#C9B083" stroke-width="3" fill="none" stroke-linecap="round"/>
   <g class="owlHead">
+    <path d="M76 56 L68 34 L90 50 Z" fill="#B08755"/>
+    <path d="M124 56 L132 34 L110 50 Z" fill="#B08755"/>
     <circle cx="100" cy="76" r="30" fill="#B08755"/>
     <circle cx="88" cy="76" r="13" fill="#E8D7B0"/><circle cx="112" cy="76" r="13" fill="#E8D7B0"/>
     <circle cx="88" cy="76" r="8" fill="#F2C14E"/><circle cx="88" cy="76" r="4" fill="#1E1A14"/>
@@ -2049,7 +2064,7 @@ function tapBird(b){
   setTimeout(() => speak(c.say || c.name), 350);
   setTimeout(() => {
     b.acting = false;
-    b.inner.classList.remove('soar','hopB','peck','drum','hoo','wiggle');
+    b.inner.classList.remove('soar','hopB','peck','drum','hoo','wiggle','owlLook','heronStrike');
   }, dur);
 }
 
@@ -2091,19 +2106,25 @@ function actZip(b){
   jump(); setTimeout(jump, 260); setTimeout(jump, 520);
   return 950;
 }
-function actSpear(b){ b.inner.classList.add('peck'); sfxHeronCk(); pondSplash(b); setTimeout(() => fishCatch(b), 420); return 1400; }
+function actSpear(b){
+  b.inner.classList.add('heronStrike');          // poised, then one fast head stab
+  setTimeout(() => sfxHeronCk(), 1040);
+  setTimeout(() => pondSplash(b), 1120);
+  setTimeout(() => fishCatch(b), 1240);
+  return 1750;
+}
 function fishCatch(b){
   const f = document.createElement('div');
   f.className = 'fishP';
   f.style.width = '5vmin'; f.style.height = '2.5vmin';
-  f.style.left = (b.x + b.size * .02) + 'px';
-  f.style.top = (b.y + b.size * .30) + 'px';
+  f.style.left = (b.x + b.size * .10) + 'px';
+  f.style.top = (b.y + b.size * .52) + 'px';
   f.innerHTML = FISH_SVG;
   $('birdFx').appendChild(f);
   setTimeout(() => f.remove(), 1400);
 }
 function actProbe(b){ b.inner.classList.add('peck'); sfxIbisG(); dirtPuff(b); return 1000; }
-function actHoo(b){ b.inner.classList.add('hoo'); sfxOwlHoo(); return 1300; }
+function actHoo(b){ b.inner.classList.add('owlLook'); sfxOwlHoo(); return 1600; }
 function actQuack(b){ b.inner.classList.add('wiggle'); sfxQuack(); return 900; }
 function actDuckFly(b){
   sfxQuack();
