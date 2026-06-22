@@ -77,16 +77,16 @@
   #door-birds  { background: linear-gradient(180deg,#B8E2F8,#7FC4EC); }
 
   #homeStickerBtn {
-    margin-top:1.5vmin; border:none; cursor:pointer;
-    background:linear-gradient(180deg,#FFF3C9,#FFE08A);
-    border-radius:6vmin; padding:1.6vmin 4vmin;
-    display:flex; align-items:center; gap:1.5vmin;
-    font-size:3.2vmin; font-weight:bold; color:#7A5A20;
-    box-shadow:0 5px 0 rgba(0,0,0,.12);
+    margin-top:2.6vmin; border:none; cursor:pointer;
+    background:linear-gradient(180deg,#FFF3C9,#FFD662);
+    border-radius:9vmin; padding:3vmin 9vmin;
+    display:flex; align-items:center; gap:2.4vmin;
+    font-size:5.4vmin; font-weight:bold; color:#7A5A20;
+    box-shadow:0 8px 0 rgba(0,0,0,.15);
     font-family:inherit;
   }
-  #homeStickerBtn:active{ transform:scale(.94); }
-  #homeStickerBtn svg{ width:5vmin; height:5vmin; }
+  #homeStickerBtn:active{ transform:scale(.95); }
+  #homeStickerBtn svg{ width:8vmin; height:8vmin; }
 
   /* ---------- top bar (game + sticker screens) ---------- */
   .topbar {
@@ -247,6 +247,10 @@
   .talkTile.saying { animation:tilePop .45s ease; }
   @keyframes tilePop { 0%{transform:scale(1)} 40%{transform:scale(1.12)} 100%{transform:scale(1)} }
   .animalTile { background:rgba(255,255,255,.92); }
+  .talkCat { font-size:2.9vmin; font-weight:bold; color:#5B4632; margin:1.6vmin 0 -.2vmin .6vmin;
+    text-shadow:0 1px 0 rgba(255,255,255,.6); }
+  .talkCat:first-child { margin-top:0; }
+  .phraseTile .tEmoji { font-size:6.6vmin; line-height:1; }
 
   /* ---------- safari hide & seek ---------- */
   body.world-safariS { background: linear-gradient(180deg,#9ED9F0 0%, #CFEFF8 55%, #F2E2B0 100%); }
@@ -1351,44 +1355,114 @@ function showRainbow(){
   praise.classList.add('show');
 }
 
-/* ---------- talk board (AAC) — every tile speaks, nothing locked ---------- */
-const PHRASES = [
-  { say:'Yes', label:'Yes', bg:'#DCF2D8', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#7DC97A"/><path d="M31 52 L44 65 L70 37" stroke="#FFF" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-  { say:'No', label:'No', bg:'#F8DCD8', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#E8574A"/><path d="M34 34 L66 66 M66 34 L34 66" stroke="#FFF" stroke-width="10" stroke-linecap="round"/></svg>` },
-  { say:'More', label:'More', bg:'#D8E8F8', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#6FA3E0"/><path d="M50 28 V72 M28 50 H72" stroke="#FFF" stroke-width="11" stroke-linecap="round"/></svg>` },
-  { say:'Stop', label:'Stop', bg:'#F8E3D8', icon:`<svg viewBox="0 0 100 100"><path d="M31 7 H69 L93 31 V69 L69 93 H31 L7 69 V31 Z" fill="#E8754A"/><g fill="#FFF"><rect x="36" y="42" width="28" height="26" rx="9"/><rect x="35" y="24" width="6.5" height="24" rx="3.2"/><rect x="44" y="20" width="6.5" height="28" rx="3.2"/><rect x="53" y="20" width="6.5" height="28" rx="3.2"/><rect x="62" y="24" width="6.5" height="24" rx="3.2"/></g></svg>` },
-  { say:'Eat', label:'Eat', bg:'#F8E0DC', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="58" r="30" fill="#E8574A"/><circle cx="40" cy="50" r="9" fill="#F08A7E" opacity=".7"/><path d="M50 30 q-2 -10 4 -14" stroke="#8A5A2B" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="62" cy="22" rx="11" ry="6" fill="#7DC97A" transform="rotate(-24 62 22)"/></svg>` },
-  { say:'Drink', label:'Drink', bg:'#D8EEF8', icon:`<svg viewBox="0 0 100 100"><path d="M28 26 L72 26 L66 86 L34 86 Z" fill="#6FB8E8"/><path d="M31 42 L69 42 L65 80 L35 80 Z" fill="#A8D8F5"/><path d="M58 24 L70 6" stroke="#E8574A" stroke-width="6" stroke-linecap="round"/></svg>` },
-  { say:'Play', label:'Play', bg:'#F2E8D8', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="#F2F2F2"/><path d="M50 12 A38 38 0 0 1 88 50 L50 50 Z" fill="#E8574A"/><path d="M12 50 A38 38 0 0 1 50 12 L50 50 Z" fill="#6FA3E0"/><path d="M50 88 A38 38 0 0 1 12 50 L50 50 Z" fill="#F2C14E"/></svg>` },
-  { say:'Help me', label:'Help', bg:'#F8E8D0', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="#E8574A"/><circle cx="50" cy="50" r="16" fill="#F8E8D0"/><g fill="#FFF"><rect x="44" y="8" width="12" height="18" rx="4"/><rect x="44" y="74" width="12" height="18" rx="4"/><rect x="8" y="44" width="18" height="12" rx="4"/><rect x="74" y="44" width="18" height="12" rx="4"/></g></svg>` },
-  { say:'Hug', label:'Hug', bg:'#F8DCE8', icon:`<svg viewBox="0 0 100 100"><path d="M50 86 Q12 60 12 36 Q12 16 30 16 Q44 16 50 30 Q56 16 70 16 Q88 16 88 36 Q88 60 50 86 Z" fill="#E86A8A"/></svg>` },
-  { say:'All done', label:'All done', bg:'#E8DCF4', icon:`<svg viewBox="0 0 100 100"><rect x="12" y="12" width="76" height="76" rx="18" fill="#9A7FD1"/><path d="M31 52 L45 66 L70 37" stroke="#FFF" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-  { say:'Happy', label:'Happy', bg:'#FBF0CC', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#F2C14E"/><circle cx="36" cy="42" r="5" fill="#5E4210"/><circle cx="64" cy="42" r="5" fill="#5E4210"/><path d="M30 58 Q50 78 70 58" stroke="#5E4210" stroke-width="6" fill="none" stroke-linecap="round"/></svg>` },
-  { say:'Sad', label:'Sad', bg:'#DCE4F0', icon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#8FA8C8"/><circle cx="36" cy="42" r="5" fill="#2E3E54"/><circle cx="64" cy="42" r="5" fill="#2E3E54"/><path d="M32 68 Q50 54 68 68" stroke="#2E3E54" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M66 50 q6 9 0 13 q-6 -4 0 -13" fill="#6FB8E8"/></svg>` }
+/* ---------- talk board (AAC) — every tile speaks, nothing locked ----------
+   Color-coded categories (Fitzgerald-style): social=pink, core=blue, feelings=
+   yellow, food=orange, actions=green, describing=purple. Emoji symbols keep it
+   clear and easy to extend. */
+const TALK_CATEGORIES = [
+  { name:'Say Hi', color:'#F8D6E8', items:[
+    { say:'Hi!', label:'Hi', emoji:'👋' },
+    { say:'Bye bye', label:'Bye', emoji:'🖐️' },
+    { say:'Please', label:'Please', emoji:'🙏' },
+    { say:'Thank you', label:'Thank you', emoji:'💖' },
+    { say:'Sorry', label:'Sorry', emoji:'😔' },
+    { say:'My turn', label:'My turn', emoji:'🙋' },
+    { say:'Your turn', label:'Your turn', emoji:'👉' },
+    { say:'Help me', label:'Help', emoji:'🆘' }
+  ]},
+  { name:'Words', color:'#D6E4F8', items:[
+    { say:'Yes', label:'Yes', emoji:'✅' },
+    { say:'No', label:'No', emoji:'❌' },
+    { say:'More', label:'More', emoji:'➕' },
+    { say:'Stop', label:'Stop', emoji:'✋' },
+    { say:'Go', label:'Go', emoji:'🟢' },
+    { say:'I want', label:'I want', emoji:'🤲' },
+    { say:'Look', label:'Look', emoji:'👀' },
+    { say:'Open', label:'Open', emoji:'📦' },
+    { say:'Again', label:'Again', emoji:'🔁' },
+    { say:'All done', label:'All done', emoji:'🏁' },
+    { say:'I like it', label:'Like', emoji:'👍' },
+    { say:"I don't like it", label:'No like', emoji:'👎' }
+  ]},
+  { name:'Feelings', color:'#FBEFC8', items:[
+    { say:'Happy', label:'Happy', emoji:'😀' },
+    { say:'Sad', label:'Sad', emoji:'😢' },
+    { say:'Mad', label:'Mad', emoji:'😠' },
+    { say:'Scared', label:'Scared', emoji:'😨' },
+    { say:'Tired', label:'Tired', emoji:'😴' },
+    { say:'Hurt', label:'Hurt', emoji:'🤕' },
+    { say:'Silly', label:'Silly', emoji:'🤪' },
+    { say:'I love you', label:'Love you', emoji:'❤️' }
+  ]},
+  { name:'Eat & Drink', color:'#F8DED4', items:[
+    { say:'Eat', label:'Eat', emoji:'🍽️' },
+    { say:'Drink', label:'Drink', emoji:'🥤' },
+    { say:'Hungry', label:'Hungry', emoji:'😋' },
+    { say:'Thirsty', label:'Thirsty', emoji:'💧' },
+    { say:'Snack', label:'Snack', emoji:'🍪' },
+    { say:'Water', label:'Water', emoji:'🚰' },
+    { say:'Apple', label:'Apple', emoji:'🍎' },
+    { say:'Banana', label:'Banana', emoji:'🍌' }
+  ]},
+  { name:'Do & Play', color:'#DCF0D4', items:[
+    { say:'Play', label:'Play', emoji:'🧸' },
+    { say:'Read a book', label:'Read', emoji:'📖' },
+    { say:'Music', label:'Music', emoji:'🎵' },
+    { say:'Go outside', label:'Outside', emoji:'🌳' },
+    { say:'Sleep', label:'Sleep', emoji:'🛌' },
+    { say:'Wash hands', label:'Wash', emoji:'🧼' },
+    { say:'Bathroom', label:'Bathroom', emoji:'🚽' },
+    { say:'Hug', label:'Hug', emoji:'🤗' }
+  ]},
+  { name:'Describe', color:'#E6DCF6', items:[
+    { say:'Big', label:'Big', emoji:'🐘' },
+    { say:'Little', label:'Little', emoji:'🐭' },
+    { say:'Hot', label:'Hot', emoji:'🔥' },
+    { say:'Cold', label:'Cold', emoji:'❄️' },
+    { say:'Fast', label:'Fast', emoji:'⚡' },
+    { say:'Slow', label:'Slow', emoji:'🐌' },
+    { say:'Good', label:'Good', emoji:'😊' },
+    { say:'Yucky', label:'Yucky', emoji:'🤢' }
+  ]}
 ];
+function tileTap(b, sayText){
+  b.classList.remove('saying'); void b.offsetWidth; b.classList.add('saying');
+  speak(sayText);
+}
+function makePhraseTile(emoji, label, sayText, bg){
+  const b = document.createElement('button');
+  b.className = 'talkTile phraseTile';
+  if(bg) b.style.background = bg;
+  b.innerHTML = '<span class="tEmoji">' + emoji + '</span><span class="tLabel">' + label + '</span>';
+  b.addEventListener('pointerdown', e => { e.preventDefault(); tileTap(b, sayText); });
+  return b;
+}
 function makeTile(iconSvg, label, sayText, bg){
   const b = document.createElement('button');
   b.className = 'talkTile' + (bg ? '' : ' animalTile');
   if(bg) b.style.background = bg;
   b.innerHTML = iconSvg + '<span class="tLabel">' + label + '</span>';
-  b.addEventListener('pointerdown', e => {
-    e.preventDefault();
-    b.classList.remove('saying'); void b.offsetWidth; b.classList.add('saying');
-    speak(sayText);
-  });
+  b.addEventListener('pointerdown', e => { e.preventDefault(); tileTap(b, sayText); });
   return b;
+}
+function addCatHeader(grid, name){
+  const h = document.createElement('div');
+  h.className = 'talkCat';
+  h.textContent = name;
+  grid.appendChild(h);
 }
 function openTalk(){
   chimeTap();
   const grid = $('stickerGrid');
   grid.innerHTML = '';
-  const pr = document.createElement('div');
-  pr.className = 'phraseRow';
-  PHRASES.forEach(p => pr.appendChild(makeTile(p.icon, p.label, p.say, p.bg)));
-  grid.appendChild(pr);
-  const dv = document.createElement('div');
-  dv.className = 'talkDivider';
-  grid.appendChild(dv);
+  TALK_CATEGORIES.forEach(cat => {
+    addCatHeader(grid, cat.name);
+    const row = document.createElement('div');
+    row.className = 'phraseRow';
+    cat.items.forEach(p => row.appendChild(makePhraseTile(p.emoji, p.label, p.say || p.label, cat.color)));
+    grid.appendChild(row);
+  });
+  addCatHeader(grid, 'Animals');
   const ar = document.createElement('div');
   ar.className = 'animalRow';
   CREATURES.forEach(c => ar.appendChild(makeTile(ART[c.id], c.name, c.say || c.name, '')));
